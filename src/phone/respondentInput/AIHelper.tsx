@@ -29,16 +29,22 @@ export const AIHelper = (props: Props) => {
 
   useEffect(() => {
     if (isLoading) setOutputText("");
-    if (aiResponse && aiResponse !== "no response") {
-      const words = aiResponse.split(" ");
+    if (aiResponse) {
+      const words =
+        aiResponse === "no response"
+          ? "More detail is needed to provide an adequate response".split(" ")
+          : aiResponse.split(" ");
 
       let index = 0;
       const displayWord = () => {
         if (index >= words.length - 1) return;
 
         setOutputText((prev) => {
-          if (index === 0) return words[0];
-          return prev + " " + words[index];
+          if (index === 0) {
+            return words[0] + " " + words[1];
+          } else {
+            return prev + " " + words[index];
+          }
         });
         index++;
         setTimeout(displayWord, 100);
@@ -57,11 +63,7 @@ export const AIHelper = (props: Props) => {
           style={{ display: "flex", alignItems: "center", minHeight: "30px" }}
         >
           <p id="output" style={{ textAlign: "left" }}>
-            {promptToSend && aiResponse
-              ? aiResponse === "no response"
-                ? "More detail is needed to provide an adequate response."
-                : outputText
-              : DEFAULT_PROMPT}
+            {promptToSend && aiResponse ? outputText : DEFAULT_PROMPT}
           </p>
         </div>
       )}
