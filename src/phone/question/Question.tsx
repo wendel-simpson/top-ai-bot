@@ -6,11 +6,12 @@ const questionSx = {
   display: "flex",
   width: "100%",
   height: "120px",
-  backgroundColor: "#a442f5",
-  margin: "80px 20px 0",
-  borderRadius: "5x",
+  color: "#fff",
+  margin: "-15px 20px 0",
+  borderRadius: "10px",
   alignItems: "center",
-  color: "#f4f1fa",
+  backgroundColor: "black",
+  lineHeight: "1.4",
 };
 
 const containerSx = {

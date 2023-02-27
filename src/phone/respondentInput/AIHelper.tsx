@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { Message } from "@mui/icons-material";
 import { BouncingDotsLoader } from "../../components/BouncingDotsLoader";
 import { useEffect, useState } from "react";
+import { Config } from "..";
 
 const paperSx = {
   display: "flex",
@@ -20,20 +21,19 @@ const DEFAULT_PROMPT = "Additional prompts will be displayed here...";
 type Props = {
   aiResponse: string;
   isLoading: boolean;
-  promptToSend: string;
+  error: string;
+  config: Config;
 };
 
 export const AIHelper = (props: Props) => {
-  const { aiResponse, isLoading, promptToSend } = props;
+  const { aiResponse, isLoading, error, config } = props;
+
+  const { is_streaming, streaming_time_delay } = config;
   const [outputText, setOutputText] = useState("");
 
   useEffect(() => {
-    if (isLoading) setOutputText("");
-    if (aiResponse) {
-      const words =
-        aiResponse === "no response"
-          ? "More detail is needed to provide an adequate response".split(" ")
-          : aiResponse.split(" ");
+    if ((aiResponse || error) && !isLoading) {
+      const words = error ? error.split(" ") : aiResponse.split(" ");
 
       let index = 0;
       const displayWord = () => {
@@ -47,24 +47,38 @@ export const AIHelper = (props: Props) => {
           }
         });
         index++;
-        setTimeout(displayWord, 100);
+        setTimeout(
+          displayWord,
+          is_streaming && streaming_time_delay ? streaming_time_delay : 0
+        ); // if no delay, then it will just display the whole thing at once!
       };
       displayWord();
     }
-  }, [aiResponse, isLoading]);
+  }, [
+    aiResponse,
+    isLoading,
+    setOutputText,
+    error,
+    is_streaming,
+    streaming_time_delay,
+  ]);
 
   return (
     <Box sx={paperSx}>
-      <Message fontSize="large" sx={{ color: "#a442f5" }} />
+      <Message fontSize="large" sx={{ color: "black" }} />
       {isLoading ? (
         <BouncingDotsLoader />
       ) : (
         <div
           style={{ display: "flex", alignItems: "center", minHeight: "30px" }}
         >
-          <p id="output" style={{ textAlign: "left" }}>
-            {promptToSend && aiResponse ? outputText : DEFAULT_PROMPT}
-          </p>
+          {!error ? (
+            <p style={{ textAlign: "left" }}>
+              {aiResponse ? outputText : DEFAULT_PROMPT}
+            </p>
+          ) : (
+            <p style={{ textAlign: "left", color: "red" }}></p>
+          )}
         </div>
       )}
     </Box>
