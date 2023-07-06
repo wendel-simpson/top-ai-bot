@@ -100,7 +100,8 @@ export const RespondentInput = (props: Props) => {
         setPromptToSend,
         setIsLoading,
         setError,
-        config.default_prompt
+        config.question,
+        config.model_name
       );
     }
   }, config.time_delay);

@@ -21,13 +21,17 @@ const containerSx = {
   marginTop: "20px",
 };
 
-const QUESTION = "How would you describe your experience on our platform?";
+type Props = {
+  question: string;
+};
 
-export const Question = () => {
+export const Question = (props: Props) => {
+  const { question } = props;
+
   return (
     <Box sx={containerSx}>
       <Paper sx={questionSx}>
-        <p>{QUESTION}</p>
+        <p>{question}</p>
       </Paper>
     </Box>
   );

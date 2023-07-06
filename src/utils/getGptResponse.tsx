@@ -22,24 +22,24 @@ export async function getChatGPTResponse(
   setPromptToSend: React.Dispatch<React.SetStateAction<string>>,
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   setError: React.Dispatch<React.SetStateAction<string>>,
-  defaultPrompt: string
+  question: string,
+  modelName: string
 ) {
   try {
     const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: defaultPrompt + `\n###\nInput: ${prompt}\nOutput: `, // add the prompt form the user
+      model: `${modelName}`,
+      prompt: `Q: ${question} A: ${prompt}->`,
       max_tokens: 256,
       temperature: 0.7,
       top_p: 1,
-      frequency_penalty: 0,
+      frequency_penalty: 0.8,
       presence_penalty: 0,
-      stop: ["\\n\\n###\\n\\n"],
+      stop: ["END"],
     });
-    console.log(
-      "Prompt to chat gpt ---->",
-      defaultPrompt + `\n###\nInput: ${prompt}\nOutput: `
-    );
+    console.log("Prompt to chat gpt ---->", `Q: ${question} A: ${prompt}->`);
+    console.log("Response JSON from chat gpt ---->", response);
     const aiResponse = response.data.choices[0].text?.trim();
+    console.log("AI response ---->", aiResponse);
     setIsLoading(false); // stop the loading animation
     if (aiResponse) {
       setAIResponse(aiResponse); // if the AI's response is not null, set the AI's response to the state, otherwise keep the previous state

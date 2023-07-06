@@ -14,7 +14,6 @@ type Props = {
 };
 
 const validationSchema = Yup.object({
-  default_prompt: Yup.string().required("Required"),
   time_delay: Yup.number()
     .required("Required")
     .min(0, "Must be greater than or equal to 0"),
@@ -28,6 +27,12 @@ const validationSchema = Yup.object({
   streaming_time_delay: Yup.number()
     .required("Required")
     .min(0, "Must be greater than or equal to 0"),
+  question: Yup.string()
+    .required("Required")
+    .min(1, "Must be at least 1 character"),
+  model_name: Yup.string()
+    .required("Required")
+    .min(1, "Must be at least 1 character"),
 });
 
 const ModalForm = (props: Props) => {
@@ -65,16 +70,29 @@ const ModalForm = (props: Props) => {
             }}
           >
             <Box display="flex" gap="10px">
-              <label htmlFor="default_prompt">Default Prompt:</label>
+              <label htmlFor="question">Question to Respondent:</label>
               <Field
                 as="textarea"
-                rows="5"
+                rows="1"
                 cols="50"
-                id="default_prompt"
-                name="default_prompt"
+                id="question"
+                name="question"
               />
-              {errors.default_prompt && touched.default_prompt && (
-                <Box>{errors.default_prompt}</Box>
+              {errors.question && touched.question && (
+                <Box>{errors.question}</Box>
+              )}
+            </Box>
+            <Box display="flex" gap="10px">
+              <label htmlFor="model_name">Model Name:</label>
+              <Field
+                as="textarea"
+                rows="1"
+                cols="50"
+                id="model_name"
+                name="model_name"
+              />
+              {errors.model_name && touched.model_name && (
+                <Box>{errors.model_name}</Box>
               )}
             </Box>
             <Box display="flex" gap="10px">
@@ -118,7 +136,6 @@ const ModalForm = (props: Props) => {
                 </>
               )}
             </Box>
-
             <Box display="flex" gap="10px">
               <label htmlFor="is_streaming">Is Streaming:</label>
               <Field id="is_streaming" name="is_streaming" type="checkbox" />
